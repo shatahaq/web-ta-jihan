@@ -1,0 +1,1 @@
+<div class="mb-6 flex items-center gap-2 text-xs text-slate-500" aria-label="Breadcrumb"><a href="<?= e(url('/dashboard')) ?>" class="hover:text-primary">Beranda</a><span>/</span><span class="font-medium text-slate-700"><?= e($title ?? 'Halaman') ?></span></div>

@@ -1,0 +1,1 @@
+<div class="px-6 py-14 text-center"><div class="mx-auto mb-4 flex h-14 w-14 items-center justify-center rounded-full bg-blue-50 text-2xl text-primary">⌕</div><h3 class="font-semibold text-slate-800"><?= e($emptyTitle ?? 'Belum ada data') ?></h3><p class="mt-1 text-sm text-slate-500"><?= e($emptyText ?? 'Data belum tersedia.') ?></p></div>

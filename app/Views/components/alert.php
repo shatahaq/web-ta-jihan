@@ -1,0 +1,1 @@
+<?php if (!empty($message)): ?><div class="rounded-xl border p-4 text-sm <?= ($type ?? 'info') === 'error' ? 'border-red-200 bg-red-50 text-danger' : 'border-blue-200 bg-blue-50 text-primary' ?>" role="alert"><?= e($message) ?></div><?php endif; ?>

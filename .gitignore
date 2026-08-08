@@ -1,0 +1,6 @@
+.env
+/storage/logs/*.log
+/storage/uploads/bukti_lunas/*
+!/storage/uploads/bukti_lunas/.gitkeep
+vendor/
+.DS_Store

@@ -1,0 +1,9 @@
+Options -Indexes
+RewriteEngine On
+
+# Serve existing static assets directly; route all other requests to the front controller.
+RewriteCond %{REQUEST_FILENAME} !-f
+RewriteCond %{REQUEST_FILENAME} !-d
+RewriteRule ^ index.php [QSA,L]
+
+# Uploaded evidence is deliberately outside public/ and cannot be executed directly.
