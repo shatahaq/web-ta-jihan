@@ -22,8 +22,7 @@ final class Validator
 
     public function max(string $field, int $length, string $message): self
     {
-        $len = function_exists('mb_strlen') ? mb_strlen((string) ($this->data[$field] ?? '')) : strlen((string) ($this->data[$field] ?? ''));
-        if ($len > $length) {
+        if (mb_strlen((string) ($this->data[$field] ?? '')) > $length) {
             $this->errors[$field] = $message;
         }
         return $this;

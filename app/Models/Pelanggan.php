@@ -57,9 +57,9 @@ final class Pelanggan extends Model
         return $this->fetch("SELECT
             COUNT(*) AS total,
             SUM(status = 'Aktif') AS aktif,
-            SUM(status <> 'Aktif' AND (tgl_nonaktif IS NULL OR DATEDIFF(CURDATE(), tgl_nonaktif) < :limit1) ) AS nonaktif_baru,
-            SUM(status <> 'Aktif' AND tgl_nonaktif IS NOT NULL AND DATEDIFF(CURDATE(), tgl_nonaktif) >= :limit2) AS nonaktif_lama
-            FROM tb_pelanggan", ['limit1' => $limit, 'limit2' => $limit]) ?? [];
+            SUM(status <> 'Aktif' AND (tgl_nonaktif IS NULL OR DATEDIFF(CURDATE(), tgl_nonaktif) < :limit_baru) ) AS nonaktif_baru,
+            SUM(status <> 'Aktif' AND tgl_nonaktif IS NOT NULL AND DATEDIFF(CURDATE(), tgl_nonaktif) >= :limit_lama) AS nonaktif_lama
+            FROM tb_pelanggan", ['limit_baru' => $limit, 'limit_lama' => $limit]) ?? [];
     }
 
     public function customerSearch(string $term, int $limit = 8): array

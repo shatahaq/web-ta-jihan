@@ -13,7 +13,10 @@
     bell:'<svg viewBox="0 0 24 24"><path d="M18 8a6 6 0 0 0-12 0c0 7-3 7-3 9h18c0-2-3-2-3-9M10 21h4"/></svg>',
     check:'<svg viewBox="0 0 24 24"><path d="m5 12 4 4L19 6"/></svg>',
     clock:'<svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 2"/></svg>',
-    alert:'<svg viewBox="0 0 24 24"><path d="M10.3 3.9 1.8 18a2 2 0 0 0 1.7 3h17a2 2 0 0 0 1.7-3L13.7 3.9a2 2 0 0 0-3.4 0Z"/><path d="M12 9v4M12 17h.01"/></svg>'
+    alert:'<svg viewBox="0 0 24 24"><path d="M10.3 3.9 1.8 18a2 2 0 0 0 1.7 3h17a2 2 0 0 0 1.7-3L13.7 3.9a2 2 0 0 0-3.4 0Z"/><path d="M12 9v4M12 17h.01"/></svg>',
+    close:'<svg viewBox="0 0 24 24"><path d="M6 6l12 12M18 6 6 18"/></svg>',
+    help:'<svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"/><path d="M9.4 9a2.7 2.7 0 1 1 4.5 2c-.9.8-1.9 1.3-1.9 2.7M12 17h.01"/></svg>',
+    'panel-left':'<svg viewBox="0 0 24 24"><rect x="3" y="3" width="18" height="18" rx="2"/><path d="M9 3v18M6 9l-2 3 2 3"/></svg>'
   };
   document.querySelectorAll('.menu-icon[data-icon]').forEach((el) => el.innerHTML = icons[el.dataset.icon] || '');
   const showToast = (type, message) => {
@@ -26,7 +29,8 @@
   const initialToast = document.getElementById('toast-data'); if (initialToast) showToast(initialToast.dataset.type, initialToast.dataset.message);
   document.querySelectorAll('.password-toggle').forEach((button) => button.addEventListener('click', () => { const input = button.parentElement.querySelector('input'); input.type = input.type === 'password' ? 'text' : 'password'; button.textContent = input.type === 'password' ? 'Lihat' : 'Sembunyikan'; }));
   const sidebar = document.getElementById('sidebar'), overlay = document.getElementById('sidebar-overlay'); const open = () => { sidebar?.classList.remove('-translate-x-full'); overlay?.classList.remove('hidden'); }; const close = () => { sidebar?.classList.add('-translate-x-full'); overlay?.classList.add('hidden'); };
-  document.getElementById('sidebar-open')?.addEventListener('click', open); document.getElementById('sidebar-close')?.addEventListener('click', close); overlay?.addEventListener('click', close);
+  document.getElementById('sidebar-open')?.addEventListener('click', open); document.getElementById('sidebar-close')?.addEventListener('click', close); overlay?.addEventListener('click', close); document.addEventListener('keydown', (event) => { if (event.key === 'Escape') close(); });
+  const sidebarToggle = document.getElementById('sidebar-toggle'); const compact = localStorage.getItem('tirtanadi-sidebar') === 'compact'; document.body.classList.toggle('sidebar-compact', compact); sidebarToggle?.setAttribute('aria-pressed', String(compact)); sidebarToggle?.addEventListener('click', () => { const next = !document.body.classList.contains('sidebar-compact'); document.body.classList.toggle('sidebar-compact', next); localStorage.setItem('tirtanadi-sidebar', next ? 'compact' : 'expanded'); sidebarToggle.setAttribute('aria-pressed', String(next)); });
   document.querySelectorAll('form[data-confirm]').forEach((form) => form.addEventListener('submit', (event) => { if (form.dataset.confirmed) return; event.preventDefault(); const modal = document.createElement('div'); modal.id='confirm-dialog'; modal.innerHTML='<div class="confirm-card"><h2 class="text-lg font-bold text-slate-900">Konfirmasi tindakan</h2><p class="mt-2 text-sm leading-6 text-slate-600"></p><div class="mt-6 flex justify-end gap-3"><button type="button" class="cancel rounded-xl border border-slate-200 px-4 py-2.5 text-sm font-semibold text-slate-600">Batal</button><button type="button" class="confirm rounded-xl bg-danger px-4 py-2.5 text-sm font-semibold text-white">Lanjutkan</button></div></div>'; modal.querySelector('p').textContent=form.dataset.confirm; modal.querySelector('.cancel').onclick=()=>modal.remove(); modal.querySelector('.confirm').onclick=()=>{ form.dataset.confirmed='1'; modal.remove(); form.requestSubmit(); }; document.body.append(modal); }));
   window.csrfToken = () => document.querySelector('meta[name="csrf-token"]')?.content || '';
 })();

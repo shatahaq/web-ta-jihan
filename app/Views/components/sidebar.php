@@ -1,23 +1,6 @@
-<?php $nav = [
-    ['/dashboard', 'Dashboard', 'grid'], ['/pelanggan', 'Data Pelanggan', 'users'], ['/pencarian-npa', 'Pencarian NPA', 'search'], ['/tagihan', 'Tagihan', 'receipt'], ['/pemutusan', 'Pemutusan', 'cut'], ['/daftar-ulang', 'Daftar Ulang', 'repeat'], ['/laporan', 'Laporan', 'chart'],
-]; ?>
-<div id="sidebar-overlay" class="fixed inset-0 z-40 hidden bg-slate-950/40 lg:hidden"></div>
-<aside id="sidebar" class="fixed inset-y-0 left-0 z-50 flex w-72 -translate-x-full flex-col bg-primary text-white shadow-2xl transition-transform lg:translate-x-0" aria-label="Navigasi utama">
-    <div class="flex h-24 items-center gap-3 border-b border-white/10 px-6">
-        <div class="flex h-12 w-12 items-center justify-center rounded-xl bg-white p-1.5"><img src="<?= e(asset('images/logo.webp')) ?>" alt="Logo Tirtanadi" class="h-full w-full object-contain"></div>
-        <div><p class="text-sm font-semibold tracking-wide">PERUMDA TIRTANADI</p><p class="text-xs text-blue-200">Cabang Medan Denai</p></div>
-        <button id="sidebar-close" class="ml-auto rounded-lg p-2 text-blue-100 hover:bg-white/10 lg:hidden" aria-label="Tutup menu">×</button>
-    </div>
-    <nav class="flex-1 space-y-1 overflow-y-auto px-4 py-6">
-        <p class="mb-3 px-3 text-[11px] font-bold tracking-[.15em] text-blue-300">MENU UTAMA</p>
-        <?php foreach ($nav as [$path, $label, $icon]): $active = is_active($path); ?>
-            <a href="<?= e(url($path)) ?>" class="flex items-center gap-3 rounded-xl px-3 py-3 text-sm font-medium transition <?= $active ? 'bg-white text-primary shadow-lg' : 'text-blue-100 hover:bg-white/10 hover:text-white' ?>">
-                <span class="menu-icon" data-icon="<?= e($icon) ?>"></span><?= e($label) ?>
-            </a>
-        <?php endforeach; ?>
-        <div class="my-5 border-t border-white/10"></div>
-        <p class="mb-3 px-3 text-[11px] font-bold tracking-[.15em] text-blue-300">SISTEM</p>
-        <a href="<?= e(url('/dashboard')) ?>" class="flex items-center gap-3 rounded-xl px-3 py-3 text-sm font-medium text-blue-100 hover:bg-white/10"><span class="menu-icon" data-icon="settings"></span>Pengaturan Akun</a>
-    </nav>
-    <div class="border-t border-white/10 p-4"><form method="post" action="<?= e(url('/logout')) ?>"><?= csrf_field() ?><button class="flex w-full items-center gap-3 rounded-xl px-3 py-3 text-sm font-semibold text-blue-100 hover:bg-white/10 hover:text-white"><span class="menu-icon" data-icon="logout"></span>Keluar dari Sistem</button></form></div>
-</aside>
+<?php $navGroups=['UTAMA'=>[['/dashboard','Dashboard','grid']],'PELANGGAN'=>[['/pelanggan','Data Pelanggan','users'],['/pencarian-npa','Pencarian NPA','search']],'TRANSAKSI'=>[['/tagihan','Tagihan','receipt'],['/pemutusan','Pemutusan','cut'],['/daftar-ulang','Daftar Ulang','repeat']],'LAPORAN'=>[['/laporan','Laporan','chart']]]; ?>
+<div id="sidebar-overlay" class="fixed inset-0 z-40 hidden bg-slate-950/45 lg:hidden"></div>
+<aside id="sidebar" class="app-sidebar fixed inset-y-0 left-0 z-50 flex -translate-x-full flex-col text-white lg:translate-x-0" aria-label="Navigasi utama">
+<div class="brand-wrap flex h-[68px] items-center gap-3 border-b border-white/10 px-5"><div class="flex h-9 w-9 shrink-0 items-center justify-center rounded-md bg-white p-1"><img src="<?= e(asset('images/logo.webp')) ?>" alt="Logo Tirtanadi" class="h-full w-full object-contain"></div><div class="brand-copy min-w-0"><p class="truncate text-[13px] font-bold tracking-wide">PERUMDA TIRTANADI</p><p class="text-[11px] text-blue-200">Cabang Medan Denai</p></div><button id="sidebar-close" class="ml-auto rounded-md p-2 text-blue-100 hover:bg-white/10 lg:hidden" aria-label="Tutup navigasi"><span class="menu-icon" data-icon="close"></span></button></div>
+<nav class="flex-1 overflow-y-auto px-3 py-4"><?php foreach($navGroups as $group=>$items): ?><div class="<?= $group==='UTAMA'?'':'mt-5 border-t border-white/10 pt-4' ?>"><p class="nav-group-label mb-2 px-3 text-[10px] font-bold tracking-[.13em] text-blue-300"><?= e($group) ?></p><div class="space-y-1"><?php foreach($items as [$path,$label,$icon]): $active=is_active($path); ?><a href="<?= e(url($path)) ?>" class="nav-link flex items-center gap-3 px-3 py-2.5 text-sm font-medium <?= $active?'text-white':'text-blue-100' ?>" <?= $active?'aria-current="page"':'' ?> title="<?= e($label) ?>"><span class="menu-icon" data-icon="<?= e($icon) ?>"></span><span class="nav-label"><?= e($label) ?></span></a><?php endforeach; ?></div></div><?php endforeach; ?></nav>
+<div class="border-t border-white/10 p-3"><form method="post" action="<?= e(url('/logout')) ?>"><?= csrf_field() ?><button class="nav-link flex w-full items-center gap-3 px-3 py-2.5 text-sm font-semibold text-blue-100 hover:bg-white/10 hover:text-white"><span class="menu-icon" data-icon="logout"></span><span class="logout-copy">Keluar</span></button></form></div></aside>

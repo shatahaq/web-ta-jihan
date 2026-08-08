@@ -1,10 +1,104 @@
 (() => {
-  const form=document.getElementById('npa-search-form'), input=document.getElementById('npa-search'), result=document.getElementById('npa-search-result'), loading=document.getElementById('npa-search-loading'); if(!form)return;
-  const esc=(v)=>String(v??'').replace(/[&<>'"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;',"'":'&#39;','"':'&quot;'}[c]));
-  const money=(v)=>'Rp '+new Intl.NumberFormat('id-ID',{maximumFractionDigits:0}).format(Number(v||0));
-  const statusClass={aktif:['bg-emerald-50','border-emerald-200','text-emerald-800','✓'],nonaktif_baru:['bg-amber-50','border-amber-200','text-amber-800','!'],nonaktif_lama:['bg-red-50','border-red-200','text-red-800','×']};
-  form.addEventListener('submit',async(e)=>{e.preventDefault();const npa=input.value.trim();if(!npa){window.showToast?.('warning','Masukkan NPA pelanggan terlebih dahulu.');input.focus();return;}loading.classList.remove('hidden');result.innerHTML='';try{const r=await fetch(`${window.APP_URL}api/pelanggan/${encodeURIComponent(npa)}/status`,{headers:{Accept:'application/json'}});const json=await r.json();if(!r.ok)throw new Error(json.message||'Data pelanggan tidak ditemukan.');render(json.data);}catch(err){result.innerHTML=`<div class="rounded-2xl border border-dashed border-slate-300 bg-white px-6 py-12 text-center shadow-card"><div class="text-3xl">⌕</div><h2 class="mt-3 font-bold text-slate-800">Data pelanggan tidak ditemukan</h2><p class="mt-1 text-sm text-slate-500">Periksa kembali NPA yang dimasukkan.</p></div>`;}finally{loading.classList.add('hidden');}});
-  function render(data){const p=data.pelanggan,k=data.kategori,style=statusClass[k.key]||statusClass.nonaktif_baru;let content='';if(k.key==='aktif'){const t=data.tagihan;content=`<div class="grid gap-4 sm:grid-cols-3"><div><p class="result-label">Jumlah Tagihan</p><p class="result-value">${esc(t.jumlah_tagihan||0)}</p></div><div><p class="result-label">Belum Lunas</p><p class="result-value">${esc(t.belum_lunas||0)} tagihan</p></div><div><p class="result-label">Total Tunggakan</p><p class="result-value">${money(t.total_tunggakan)}</p></div></div><a href="${window.APP_URL}tagihan?q=${encodeURIComponent(p.npa)}" class="result-button">Lihat Detail Tagihan →</a>`;}else if(k.key==='nonaktif_baru'){const m=data.pemutusan;content=m?`<div class="grid gap-4 sm:grid-cols-2"><div><p class="result-label">Tanggal Pemutusan</p><p class="result-value">${esc(m.tgl_pemutusan)}</p></div><div><p class="result-label">Status Pemutusan</p><p class="result-value">${esc(m.status_pemutusan)}</p></div><div><p class="result-label">Jenis Tindakan</p><p class="result-value">${esc(m.jenis_tindakan)}</p></div><div><p class="result-label">Biaya Tindakan</p><p class="result-value">${money(m.biaya_tindakan)}</p></div></div><a href="${window.APP_URL}pemutusan?q=${encodeURIComponent(p.npa)}" class="result-button">Lihat Detail Pemutusan →</a>`:'<p class="mt-5 rounded-xl bg-white/60 p-4 text-sm">Belum ada data tindakan pemutusan untuk pelanggan ini.</p>';}else{const d=data.daftar_ulang;const status=d?esc(d.status_verifikasi):'Belum Daftar Ulang';const button=!d&&window.APP_ROLE==='Admin'?`<a href="${window.APP_URL}daftar-ulang/create?npa=${encodeURIComponent(p.npa)}" class="result-button">Ajukan Daftar Ulang →</a>`:(d?`<a href="${window.APP_URL}daftar-ulang/${encodeURIComponent(d.no_registrasi)}" class="result-button">Lihat Pengajuan →</a>`:'');content=`<div class="grid gap-4 sm:grid-cols-2"><div><p class="result-label">Informasi Daftar Ulang</p><p class="result-value">${status}</p></div><div><p class="result-label">Biaya Daftar Ulang</p><p class="result-value">${d?money(d.biaya_daftar_ulang):'—'}</p></div></div>${button}`;}
-    result.innerHTML=`<article class="overflow-hidden rounded-2xl border ${style[1]} bg-white shadow-card"><header class="${style[0]} px-6 py-5 sm:px-7"><div class="flex items-center gap-3"><span class="flex h-10 w-10 items-center justify-center rounded-full bg-white text-xl font-bold ${style[2]}">${style[3]}</span><div><p class="text-xs font-bold uppercase tracking-wider ${style[2]}">Status Pelanggan</p><h2 class="mt-1 text-xl font-extrabold ${style[2]}">${esc(k.label)}</h2></div></div></header><div class="p-6 sm:p-7"><div class="mb-6 grid gap-4 border-b border-slate-100 pb-6 sm:grid-cols-3"><div><p class="result-label">Nama Pelanggan</p><p class="result-value">${esc(p.nama_pelanggan)}</p></div><div><p class="result-label">NPA</p><p class="result-value font-mono">${esc(p.npa)}</p></div><div><p class="result-label">Alamat</p><p class="result-value">${esc(p.alamat)}</p></div></div>${content}</div></article>`;
+  const form = document.getElementById('npa-search-form');
+  const input = document.getElementById('npa-search');
+  const result = document.getElementById('npa-search-result');
+  const loading = document.getElementById('npa-search-loading');
+  if (!form || !input || !result || !loading) return;
+
+  const escapeHtml = (value) => String(value ?? '').replace(/[&<>'"]/g, (character) => ({
+    '&': '&amp;', '<': '&lt;', '>': '&gt;', "'": '&#39;', '"': '&quot;'
+  }[character]));
+
+  const formatCurrency = (value) => `Rp ${new Intl.NumberFormat('id-ID', {
+    maximumFractionDigits: 0
+  }).format(Number(value || 0))}`;
+
+  const renderEmpty = (title, description) => {
+    result.innerHTML = `<section class="ui-card px-6 py-12 text-center" role="status">
+      <div class="mx-auto mb-3 flex h-12 w-12 items-center justify-center rounded-full bg-slate-100 text-xl text-slate-600" aria-hidden="true">⌕</div>
+      <h2 class="font-semibold text-slate-800">${escapeHtml(title)}</h2>
+      <p class="mt-1 text-sm text-slate-500">${escapeHtml(description)}</p>
+    </section>`;
+  };
+
+  const field = (label, value, extraClass = '') => `<div><p class="result-label">${escapeHtml(label)}</p><p class="result-value ${extraClass}">${escapeHtml(value || '—')}</p></div>`;
+  const actionLink = (href, label) => `<a href="${href}" class="result-button">${escapeHtml(label)} <span aria-hidden="true">→</span></a>`;
+
+  function renderActive(data) {
+    const bill = data.tagihan || {};
+    return `<div class="grid gap-4 sm:grid-cols-3">
+      ${field('Jumlah Tagihan', bill.jumlah_tagihan || 0)}
+      ${field('Belum Lunas', `${bill.belum_lunas || 0} tagihan`)}
+      ${field('Total Tunggakan', formatCurrency(bill.total_tunggakan))}
+    </div>${actionLink(`${window.APP_URL}tagihan?q=${encodeURIComponent(data.pelanggan.npa)}`, 'Lihat detail tagihan')}`;
   }
+
+  function renderDisconnection(data) {
+    const disconnection = data.pemutusan;
+    if (!disconnection) return '<p class="mt-5 rounded-lg bg-white/70 p-4 text-sm text-slate-600">Belum ada data tindakan pemutusan untuk pelanggan ini.</p>';
+    return `<div class="grid gap-4 sm:grid-cols-2">
+      ${field('Tanggal Pemutusan', disconnection.tgl_pemutusan)}
+      ${field('Status Pemutusan', disconnection.status_pemutusan)}
+      ${field('Jenis Tindakan', disconnection.jenis_tindakan)}
+      ${field('Biaya Tindakan', formatCurrency(disconnection.biaya_tindakan))}
+    </div>${actionLink(`${window.APP_URL}pemutusan?q=${encodeURIComponent(data.pelanggan.npa)}`, 'Lihat detail pemutusan')}`;
+  }
+
+  function renderReconnection(data) {
+    const registration = data.daftar_ulang;
+    const status = registration ? registration.status_verifikasi : 'Belum daftar ulang';
+    let action = '';
+    if (registration) action = actionLink(`${window.APP_URL}daftar-ulang/${encodeURIComponent(registration.no_registrasi)}`, 'Lihat pengajuan');
+    if (!registration && window.APP_ROLE === 'Admin') action = actionLink(`${window.APP_URL}daftar-ulang/create?npa=${encodeURIComponent(data.pelanggan.npa)}`, 'Ajukan daftar ulang');
+    return `<div class="grid gap-4 sm:grid-cols-2">
+      ${field('Status Daftar Ulang', status)}
+      ${field('Biaya Daftar Ulang', registration ? formatCurrency(registration.biaya_daftar_ulang) : '—')}
+    </div>${action}`;
+  }
+
+  function renderCustomer(data) {
+    const customer = data.pelanggan || {};
+    const category = data.kategori || {};
+    const presentation = {
+      aktif: { background: 'bg-emerald-50', border: 'border-emerald-200', text: 'text-emerald-800', icon: '✓', body: renderActive },
+      nonaktif_baru: { background: 'bg-amber-50', border: 'border-amber-200', text: 'text-amber-800', icon: '!', body: renderDisconnection },
+      nonaktif_lama: { background: 'bg-red-50', border: 'border-red-200', text: 'text-red-800', icon: '×', body: renderReconnection }
+    }[category.key] || { background: 'bg-slate-50', border: 'border-slate-200', text: 'text-slate-800', icon: 'i', body: () => '' };
+
+    result.innerHTML = `<article class="overflow-hidden rounded-xl border ${presentation.border} bg-white shadow-card" aria-live="polite">
+      <header class="${presentation.background} px-6 py-5 sm:px-7"><div class="flex items-center gap-3">
+        <span class="flex h-9 w-9 items-center justify-center rounded-full bg-white font-bold ${presentation.text}" aria-hidden="true">${presentation.icon}</span>
+        <div><p class="text-xs font-bold uppercase tracking-wider ${presentation.text}">Status pelanggan</p><h2 class="mt-1 text-xl font-bold ${presentation.text}">${escapeHtml(category.label)}</h2></div>
+      </div></header>
+      <div class="p-6 sm:p-7"><div class="mb-6 grid gap-4 border-b border-slate-100 pb-6 sm:grid-cols-3">
+        ${field('Nama Pelanggan', customer.nama_pelanggan)}
+        ${field('NPA', customer.npa, 'font-mono')}
+        ${field('Alamat', customer.alamat)}
+      </div>${presentation.body(data)}</div>
+    </article>`;
+  }
+
+  form.addEventListener('submit', async (event) => {
+    event.preventDefault();
+    const npa = input.value.trim();
+    if (!npa) {
+      window.showToast?.('warning', 'Masukkan NPA pelanggan terlebih dahulu.');
+      input.focus();
+      return;
+    }
+    loading.classList.remove('hidden');
+    result.setAttribute('aria-busy', 'true');
+    result.innerHTML = '';
+    try {
+      const response = await fetch(`${window.APP_URL}api/pelanggan/${encodeURIComponent(npa)}/status`, { headers: { Accept: 'application/json' } });
+      const payload = await response.json();
+      if (!response.ok) throw new Error(payload.message || 'Data pelanggan tidak ditemukan.');
+      renderCustomer(payload.data);
+    } catch (error) {
+      renderEmpty('Data pelanggan tidak ditemukan', 'Periksa kembali NPA yang dimasukkan, lalu coba lagi.');
+    } finally {
+      loading.classList.add('hidden');
+      result.removeAttribute('aria-busy');
+    }
+  });
 })();
