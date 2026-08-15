@@ -22,7 +22,7 @@
   };
 
   const field = (label, value, extraClass = '') => `<div><p class="result-label">${escapeHtml(label)}</p><p class="result-value ${extraClass}">${escapeHtml(value || '—')}</p></div>`;
-  const actionLink = (href, label) => `<a href="${href}" class="result-button">${escapeHtml(label)} <span aria-hidden="true">→</span></a>`;
+  const actionLink = (href, label) => `<div class="mt-6 flex justify-end"><a href="${href}" class="result-button">${escapeHtml(label)} <span aria-hidden="true">→</span></a></div>`;
 
   function renderActive(data) {
     const bill = data.tagihan || {};

@@ -6,8 +6,8 @@
     <meta name="description" content="Sistem Informasi Status Pemutusan dan Daftar Ulang Pelanggan Nonaktif Tirtanadi Cabang Medan Denai">
     <meta name="csrf-token" content="<?= e(Auth::token()) ?>">
     <title><?= e($title ?? config('name')) ?> · Tirtanadi</title>
-    <script>tailwind = { config: { theme: { extend: { fontFamily: { sans: ['Inter','system-ui','sans-serif'] }, colors: { primary: '#0b3a69', 'primary-dark': '#082b4c', success: '#137a4a', warning: '#a85f00', danger: '#b42318', background: '#f3f7fb' } } } } };</script>
     <script src="https://cdn.tailwindcss.com"></script>
+    <script>tailwind.config = { theme: { extend: { fontFamily: { sans: ['Inter','system-ui','sans-serif'] }, colors: { primary: '#0b3a69', 'primary-dark': '#082b4c', success: '#137a4a', warning: '#a85f00', danger: '#b42318', background: '#f3f7fb' } } } };</script>
     <link rel="stylesheet" href="<?= e(asset('css/app.css')) ?>">
 </head>
 <body class="min-h-screen bg-background text-slate-800">

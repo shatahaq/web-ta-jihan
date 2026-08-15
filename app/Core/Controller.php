@@ -4,14 +4,14 @@ declare(strict_types=1);
 
 abstract class Controller
 {
-    protected function view(string $view, array $data = [], string $layout = 'app'): void
+    protected function view(string $view, array $viewData = [], string $layout = 'app'): void
     {
         $viewFile = root_path('app/Views/' . $view . '.php');
         if (!is_file($viewFile)) {
             throw new RuntimeException('Tampilan tidak ditemukan.');
         }
 
-        extract($data, EXTR_SKIP);
+        extract($viewData, EXTR_SKIP);
         $contentView = $viewFile;
         require root_path('app/Views/layouts/' . $layout . '.php');
     }

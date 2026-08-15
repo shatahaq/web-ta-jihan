@@ -36,12 +36,17 @@ final class Pemutusan extends Model
 
     public function create(array $data): bool
     {
+        $this->execute("UPDATE tb_pelanggan SET status = 'Putus', tgl_nonaktif = :tgl_pemutusan WHERE npa = :npa", ['npa' => $data['npa'], 'tgl_pemutusan' => $data['tgl_pemutusan']]);
         return $this->execute('INSERT INTO tb_pemutusan (npa, tgl_pemutusan, status_pemutusan, jenis_tindakan, biaya_tindakan, keterangan)
             VALUES (:npa, :tgl_pemutusan, :status_pemutusan, :jenis_tindakan, :biaya_tindakan, :keterangan)', $data);
     }
 
     public function update(int $id, array $data): bool
     {
+        $npa = $this->fetch('SELECT npa FROM tb_pemutusan WHERE id_pemutusan = :id', ['id' => $id])['npa'] ?? '';
+        if ($npa) {
+            $this->execute("UPDATE tb_pelanggan SET tgl_nonaktif = :tgl_pemutusan WHERE npa = :npa", ['npa' => $npa, 'tgl_pemutusan' => $data['tgl_pemutusan']]);
+        }
         unset($data['npa']);
         $data['id'] = $id;
         return $this->execute('UPDATE tb_pemutusan SET tgl_pemutusan = :tgl_pemutusan, status_pemutusan = :status_pemutusan,

@@ -71,16 +71,12 @@ final class PelangganController extends Controller
         $data = [
             'npa' => trim((string) ($_POST['npa'] ?? '')), 'nama_pelanggan' => trim((string) ($_POST['nama_pelanggan'] ?? '')),
             'alamat' => trim((string) ($_POST['alamat'] ?? '')), 'no_telepon' => trim((string) ($_POST['no_telepon'] ?? '')),
-            'golongan' => trim((string) ($_POST['golongan'] ?? '')), 'status' => (string) ($_POST['status'] ?? ''),
-            'tgl_nonaktif' => trim((string) ($_POST['tgl_nonaktif'] ?? '')),
         ];
-        if ($data['status'] === 'Aktif') $data['tgl_nonaktif'] = null;
         $this->validate($data, static function (Validator $v) use ($withNpa): void {
             if ($withNpa) $v->required('npa', 'NPA wajib diisi.')->max('npa', 20, 'NPA maksimal 20 karakter.');
             $v->required('nama_pelanggan', 'Nama pelanggan wajib diisi.')->max('nama_pelanggan', 100, 'Nama maksimal 100 karakter.')
-              ->required('alamat', 'Alamat wajib diisi.')->in('status', ['Aktif','Nonaktif','Putus'], 'Status tidak valid.')->date('tgl_nonaktif', 'Tanggal nonaktif tidak valid.');
+              ->required('alamat', 'Alamat wajib diisi.');
         }, $withNpa ? '/pelanggan/create' : ($_SERVER['HTTP_REFERER'] ?? '/pelanggan'));
-        if ($data['status'] !== 'Aktif' && !$data['tgl_nonaktif']) { Session::flash('errors', ['tgl_nonaktif' => 'Tanggal nonaktif wajib diisi untuk status ini.']); Session::flash('old', $data); redirect($_SERVER['HTTP_REFERER'] ?? '/pelanggan'); }
         return $data;
     }
 

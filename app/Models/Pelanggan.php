@@ -30,15 +30,14 @@ final class Pelanggan extends Model
 
     public function create(array $data): bool
     {
-        return $this->execute('INSERT INTO tb_pelanggan (npa, nama_pelanggan, alamat, no_telepon, golongan, status, tgl_nonaktif)
-            VALUES (:npa, :nama_pelanggan, :alamat, :no_telepon, :golongan, :status, :tgl_nonaktif)', $data);
+        return $this->execute('INSERT INTO tb_pelanggan (npa, nama_pelanggan, alamat, no_telepon)
+            VALUES (:npa, :nama_pelanggan, :alamat, :no_telepon)', $data);
     }
 
     public function update(string $npa, array $data): bool
     {
         $data['npa'] = $npa;
-        return $this->execute('UPDATE tb_pelanggan SET nama_pelanggan = :nama_pelanggan, alamat = :alamat, no_telepon = :no_telepon,
-            golongan = :golongan, status = :status, tgl_nonaktif = :tgl_nonaktif WHERE npa = :npa', $data);
+        return $this->execute('UPDATE tb_pelanggan SET nama_pelanggan = :nama_pelanggan, alamat = :alamat, no_telepon = :no_telepon WHERE npa = :npa', $data);
     }
 
     public function delete(string $npa): bool
@@ -66,7 +65,7 @@ final class Pelanggan extends Model
     {
         $term = trim($term);
         return $this->fetchAll('SELECT npa, nama_pelanggan, alamat, status, tgl_nonaktif FROM tb_pelanggan
-            WHERE npa LIKE :term OR nama_pelanggan LIKE :term ORDER BY npa LIMIT ' . (int) $limit, ['term' => '%' . $term . '%']);
+            WHERE npa LIKE :term1 OR nama_pelanggan LIKE :term2 ORDER BY npa LIMIT ' . (int) $limit, ['term1' => '%' . $term . '%', 'term2' => '%' . $term . '%']);
     }
 
     public function report(array $filters): array

@@ -43,3 +43,36 @@ INSERT INTO tb_daftar_ulang (no_registrasi, npa, tgl_permohonan, biaya_daftar_ul
 ('DU-2026-0002', '1201000005', DATE_SUB(NOW(), INTERVAL 20 DAY), 400000.00, NULL, 'Dokumen telah dilengkapi.', 'Disetujui', DATE_SUB(NOW(), INTERVAL 18 DAY), 1),
 ('DU-2026-0003', '1201000010', DATE_SUB(NOW(), INTERVAL 14 DAY), 350000.00, NULL, 'Mohon verifikasi ulang.', 'Ditolak', DATE_SUB(NOW(), INTERVAL 12 DAY), 2)
 ON DUPLICATE KEY UPDATE biaya_daftar_ulang = VALUES(biaya_daftar_ulang);
+-- Dummy Data Pelanggan (Aktif & Putus)
+
+-- Pelanggan Putus (Dari Laporan Pemutusan)
+INSERT IGNORE INTO tb_pelanggan (npa, nama_pelanggan, alamat, golongan, status, tgl_nonaktif) VALUES
+('0306150016', 'YARNIAR SINAGA, DRS', 'MA SELATAN Gg SEHATI 4', 'R1', 'Putus', '2025-07-31'),
+('0305220012', 'H MOHD SALEH', 'MA SELATAN Gg PENGHULU 18-A', 'R1', 'Putus', '2025-07-31'),
+('0305280010', 'YULIANI SIREGAR', 'MA SELATAN Gg MANGUN 3-A', 'R1', 'Putus', '2025-07-31'),
+('0305410005', 'ASIAH', 'A RAHMAN HAKIM Gg SEKAWAN/HM SALEH 380-F/11-B', 'R1', 'Putus', '2025-07-31'),
+('0309320029', 'DRS WESLY HUTABARAT MSC', 'RAJAWALI I 13-QQ', 'R1', 'Putus', '2025-10-30'),
+('0325660038', 'JAFAAR', 'MENTENG II Gg PEMBANGUNAN 15-B', 'R1', 'Putus', '2025-10-30');
+
+-- Data Pemutusan
+INSERT IGNORE INTO tb_pemutusan (npa, tgl_pemutusan, status_pemutusan, jenis_tindakan, biaya_tindakan, keterangan) VALUES
+('0306150016', '2025-07-31', 'Selesai', 'Potong Pipa Dinas', 50000, 'TRA 6 BULAN, PD'),
+('0305220012', '2025-07-31', 'Selesai', 'Potong Pipa Dinas', 50000, 'TRA 6 BULAN, DINAS DI DOP METER HILANG'),
+('0305280010', '2025-07-31', 'Selesai', 'Potong Pipa Dinas', 50000, 'TRA 6 BULAN, PD METER HILANG'),
+('0305410005', '2025-07-31', 'Selesai', 'Angkat Meter', 50000, 'TRA 10 BULAN, AM ST: 0006.95 MELINDO'),
+('0309320029', '2025-10-30', 'Selesai', 'Potong Pipa Dinas', 50000, 'TRA 6 BULAN, PD'),
+('0325660038', '2025-10-30', 'Selesai', 'Angkat Meter', 50000, 'TRA 6 BULAN, AM ST: 6717 LINFLOW');
+
+-- Pelanggan Aktif (Dari Daftar Saldo Tunggakan Rekening Air Aktif)
+INSERT IGNORE INTO tb_pelanggan (npa, nama_pelanggan, alamat, golongan, status) VALUES
+('0301010177', 'JOHNY', 'ASIA BLOK-G 13/12-A', 'N.2', 'Aktif'),
+('0301030001', 'AMAT ALI', 'AKIK 47-A', 'RT.5', 'Aktif'),
+('0301050046', 'SELAMAT', 'AKIK 191-E/55-D', 'RT.5', 'Aktif'),
+('0301050067', 'JENNY', 'SUTRISNO DALAM 222-F/432-', 'N.3', 'Aktif');
+
+-- Data Tagihan Dummy (Untuk Pelanggan Aktif yang Memiliki Tunggakan 08-2025)
+INSERT IGNORE INTO tb_tagihan (npa, periode, meter_awal, meter_akhir, total_tagihan, status_bayar) VALUES
+('0301010177', '2025-08-01', 1000, 1020, 241915.60, 'Belum Lunas'),
+('0301030001', '2025-08-01', 1500, 1505, 7000.00, 'Belum Lunas'),
+('0301050046', '2025-08-01', 2000, 2010, 7000.00, 'Belum Lunas'),
+('0301050067', '2025-08-01', 2500, 2520, 6000.00, 'Belum Lunas');
