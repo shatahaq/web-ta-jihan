@@ -9,17 +9,17 @@ INSERT INTO tb_user (id_user, username, password, nama_lengkap, role) VALUES
 (5, 'pimpinan.layanan', '$2y$10$WUo/agn9cv2.nVNP8r9uP.7BE7zzOfScz1zxa7Mbv0Fxqbmj6EFrW', 'Sari Handayani', 'Pimpinan')
 ON DUPLICATE KEY UPDATE username = VALUES(username);
 
-INSERT INTO tb_pelanggan (npa, nama_pelanggan, alamat, no_telepon, golongan, status, tgl_nonaktif) VALUES
-('1201000001', 'Budi Santoso', 'Jl. Pelajar No. 12, Medan Denai', '081260000001', 'R2', 'Aktif', NULL),
-('1201000002', 'Maya Sari', 'Jl. Tangguk Bongkar X, Medan Denai', '081260000002', 'R2', 'Aktif', NULL),
-('1201000003', 'Andi Pratama', 'Jl. Pancasila No. 34, Medan Denai', '081260000003', 'R3', 'Nonaktif', DATE_SUB(CURDATE(), INTERVAL 21 DAY)),
-('1201000004', 'Dewi Lestari', 'Jl. Denai No. 87, Medan Denai', '081260000004', 'R2', 'Nonaktif', DATE_SUB(CURDATE(), INTERVAL 75 DAY)),
-('1201000005', 'Rudi Hartono', 'Jl. Seksama No. 9, Medan Denai', '081260000005', 'R3', 'Nonaktif', DATE_SUB(CURDATE(), INTERVAL 90 DAY)),
-('1201000006', 'Intan Permata', 'Jl. Panglima Denai No. 45, Medan Denai', '081260000006', 'R2', 'Aktif', NULL),
-('1201000007', 'Fajar Ramadhan', 'Jl. Menteng VII, Medan Denai', '081260000007', 'R1', 'Putus', DATE_SUB(CURDATE(), INTERVAL 66 DAY)),
-('1201000008', 'Nina Kurnia', 'Jl. AR Hakim No. 111, Medan Denai', '081260000008', 'R2', 'Nonaktif', DATE_SUB(CURDATE(), INTERVAL 12 DAY)),
-('1201000009', 'Agus Salim', 'Jl. Pasar Merah, Medan Denai', '081260000009', 'R1', 'Aktif', NULL),
-('1201000010', 'Citra Amelia', 'Jl. Garu II, Medan Denai', '081260000010', 'R3', 'Nonaktif', DATE_SUB(CURDATE(), INTERVAL 61 DAY))
+INSERT INTO tb_pelanggan (npa, nama_pelanggan, alamat, no_telepon, status, tgl_nonaktif) VALUES
+('1201000001', 'Budi Santoso', 'Jl. Pelajar No. 12, Medan Denai', '081260000001', 'Aktif', NULL),
+('1201000002', 'Maya Sari', 'Jl. Tangguk Bongkar X, Medan Denai', '081260000002', 'Aktif', NULL),
+('1201000003', 'Andi Pratama', 'Jl. Pancasila No. 34, Medan Denai', '081260000003', 'Nonaktif', DATE_SUB(CURDATE(), INTERVAL 21 DAY)),
+('1201000004', 'Dewi Lestari', 'Jl. Denai No. 87, Medan Denai', '081260000004', 'Nonaktif', DATE_SUB(CURDATE(), INTERVAL 75 DAY)),
+('1201000005', 'Rudi Hartono', 'Jl. Seksama No. 9, Medan Denai', '081260000005', 'Nonaktif', DATE_SUB(CURDATE(), INTERVAL 90 DAY)),
+('1201000006', 'Intan Permata', 'Jl. Panglima Denai No. 45, Medan Denai', '081260000006', 'Aktif', NULL),
+('1201000007', 'Fajar Ramadhan', 'Jl. Menteng VII, Medan Denai', '081260000007', 'Putus', DATE_SUB(CURDATE(), INTERVAL 66 DAY)),
+('1201000008', 'Nina Kurnia', 'Jl. AR Hakim No. 111, Medan Denai', '081260000008', 'Nonaktif', DATE_SUB(CURDATE(), INTERVAL 12 DAY)),
+('1201000009', 'Agus Salim', 'Jl. Pasar Merah, Medan Denai', '081260000009', 'Aktif', NULL),
+('1201000010', 'Citra Amelia', 'Jl. Garu II, Medan Denai', '081260000010', 'Nonaktif', DATE_SUB(CURDATE(), INTERVAL 61 DAY))
 ON DUPLICATE KEY UPDATE nama_pelanggan = VALUES(nama_pelanggan);
 
 INSERT INTO tb_tagihan (npa, periode, meter_awal, meter_akhir, total_tagihan, status_bayar, tgl_bayar) VALUES
@@ -46,13 +46,13 @@ ON DUPLICATE KEY UPDATE biaya_daftar_ulang = VALUES(biaya_daftar_ulang);
 -- Dummy Data Pelanggan (Aktif & Putus)
 
 -- Pelanggan Putus (Dari Laporan Pemutusan)
-INSERT IGNORE INTO tb_pelanggan (npa, nama_pelanggan, alamat, golongan, status, tgl_nonaktif) VALUES
-('0306150016', 'YARNIAR SINAGA, DRS', 'MA SELATAN Gg SEHATI 4', 'R1', 'Putus', '2025-07-31'),
-('0305220012', 'H MOHD SALEH', 'MA SELATAN Gg PENGHULU 18-A', 'R1', 'Putus', '2025-07-31'),
-('0305280010', 'YULIANI SIREGAR', 'MA SELATAN Gg MANGUN 3-A', 'R1', 'Putus', '2025-07-31'),
-('0305410005', 'ASIAH', 'A RAHMAN HAKIM Gg SEKAWAN/HM SALEH 380-F/11-B', 'R1', 'Putus', '2025-07-31'),
-('0309320029', 'DRS WESLY HUTABARAT MSC', 'RAJAWALI I 13-QQ', 'R1', 'Putus', '2025-10-30'),
-('0325660038', 'JAFAAR', 'MENTENG II Gg PEMBANGUNAN 15-B', 'R1', 'Putus', '2025-10-30');
+INSERT IGNORE INTO tb_pelanggan (npa, nama_pelanggan, alamat, status, tgl_nonaktif) VALUES
+('0306150016', 'YARNIAR SINAGA, DRS', 'MA SELATAN Gg SEHATI 4', 'Putus', '2025-07-31'),
+('0305220012', 'H MOHD SALEH', 'MA SELATAN Gg PENGHULU 18-A', 'Putus', '2025-07-31'),
+('0305280010', 'YULIANI SIREGAR', 'MA SELATAN Gg MANGUN 3-A', 'Putus', '2025-07-31'),
+('0305410005', 'ASIAH', 'A RAHMAN HAKIM Gg SEKAWAN/HM SALEH 380-F/11-B', 'Putus', '2025-07-31'),
+('0309320029', 'DRS WESLY HUTABARAT MSC', 'RAJAWALI I 13-QQ', 'Putus', '2025-10-30'),
+('0325660038', 'JAFAAR', 'MENTENG II Gg PEMBANGUNAN 15-B', 'Putus', '2025-10-30');
 
 -- Data Pemutusan
 INSERT IGNORE INTO tb_pemutusan (npa, tgl_pemutusan, status_pemutusan, jenis_tindakan, biaya_tindakan, keterangan) VALUES
@@ -64,7 +64,7 @@ INSERT IGNORE INTO tb_pemutusan (npa, tgl_pemutusan, status_pemutusan, jenis_tin
 ('0325660038', '2025-10-30', 'Selesai', 'Angkat Meter', 50000, 'TRA 6 BULAN, AM ST: 6717 LINFLOW');
 
 -- Pelanggan Aktif (Dari Daftar Saldo Tunggakan Rekening Air Aktif)
-INSERT IGNORE INTO tb_pelanggan (npa, nama_pelanggan, alamat, golongan, status) VALUES
+INSERT IGNORE INTO tb_pelanggan (npa, nama_pelanggan, alamat, status) VALUES
 ('0301010177', 'JOHNY', 'ASIA BLOK-G 13/12-A', 'N.2', 'Aktif'),
 ('0301030001', 'AMAT ALI', 'AKIK 47-A', 'RT.5', 'Aktif'),
 ('0301050046', 'SELAMAT', 'AKIK 191-E/55-D', 'RT.5', 'Aktif'),

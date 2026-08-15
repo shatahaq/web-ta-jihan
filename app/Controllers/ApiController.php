@@ -32,7 +32,7 @@ final class ApiController extends Controller
     public function createPelanggan(): void
     {
         Auth::requireAdmin(true); $this->csrfOrFail(true);
-        $data = ['npa' => trim((string) ($_POST['npa'] ?? '')), 'nama_pelanggan' => trim((string) ($_POST['nama_pelanggan'] ?? '')), 'alamat' => trim((string) ($_POST['alamat'] ?? '')), 'no_telepon' => trim((string) ($_POST['no_telepon'] ?? '')), 'golongan' => trim((string) ($_POST['golongan'] ?? '')), 'status' => (string) ($_POST['status'] ?? 'Aktif'), 'tgl_nonaktif' => ($_POST['tgl_nonaktif'] ?? '') ?: null];
+        $data = ['npa' => trim((string) ($_POST['npa'] ?? '')), 'nama_pelanggan' => trim((string) ($_POST['nama_pelanggan'] ?? '')), 'alamat' => trim((string) ($_POST['alamat'] ?? '')), 'no_telepon' => trim((string) ($_POST['no_telepon'] ?? '')), 'status' => (string) ($_POST['status'] ?? 'Aktif'), 'tgl_nonaktif' => ($_POST['tgl_nonaktif'] ?? '') ?: null];
         $v = new Validator($data); $v->required('npa', 'NPA wajib diisi.')->max('npa',20,'NPA maksimal 20 karakter.')->required('nama_pelanggan','Nama pelanggan wajib diisi.')->required('alamat','Alamat wajib diisi.')->in('status',['Aktif','Nonaktif','Putus'],'Status tidak valid.');
         if ($v->fails()) self::json(['message' => 'Data belum lengkap.', 'errors' => $v->errors()], 422);
         if ((new Pelanggan())->find($data['npa'])) self::json(['message' => 'NPA sudah terdaftar.'], 422);
@@ -42,7 +42,7 @@ final class ApiController extends Controller
     public function updatePelanggan(string $npa): void
     {
         Auth::requireAdmin(true); $this->csrfOrFail(true); $customer = new Pelanggan(); if (!$customer->find($npa)) self::json(['message' => 'Data pelanggan tidak ditemukan.'], 404);
-        parse_str(file_get_contents('php://input'), $input); $data = ['nama_pelanggan' => trim((string) ($input['nama_pelanggan'] ?? '')), 'alamat' => trim((string) ($input['alamat'] ?? '')), 'no_telepon' => trim((string) ($input['no_telepon'] ?? '')), 'golongan' => trim((string) ($input['golongan'] ?? '')), 'status' => (string) ($input['status'] ?? 'Aktif'), 'tgl_nonaktif' => ($input['tgl_nonaktif'] ?? '') ?: null];
+        parse_str(file_get_contents('php://input'), $input); $data = ['nama_pelanggan' => trim((string) ($input['nama_pelanggan'] ?? '')), 'alamat' => trim((string) ($input['alamat'] ?? '')), 'no_telepon' => trim((string) ($input['no_telepon'] ?? '')), 'status' => (string) ($input['status'] ?? 'Aktif'), 'tgl_nonaktif' => ($input['tgl_nonaktif'] ?? '') ?: null];
         if ($data['status'] === 'Aktif') $data['tgl_nonaktif'] = null; $customer->update($npa, $data); self::json(['message' => 'Data pelanggan berhasil diperbarui.']);
     }
 

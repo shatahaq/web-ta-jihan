@@ -18,7 +18,7 @@ CREATE TABLE IF NOT EXISTS tb_pelanggan (
     nama_pelanggan VARCHAR(100) NOT NULL,
     alamat TEXT NOT NULL,
     no_telepon VARCHAR(20) NULL,
-    golongan VARCHAR(10) NULL,
+
     status ENUM('Aktif', 'Nonaktif', 'Putus') NOT NULL DEFAULT 'Aktif',
     tgl_nonaktif DATE NULL,
     created_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,

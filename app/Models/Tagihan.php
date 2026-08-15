@@ -8,7 +8,7 @@ final class Tagihan extends Model
     {
         $where = [];
         $params = [];
-        if ($search !== '') { $where[] = '(t.npa LIKE :search OR p.nama_pelanggan LIKE :search)'; $params['search'] = '%' . $search . '%'; }
+        if ($search !== '') { $where[] = '(t.npa LIKE :search1 OR p.nama_pelanggan LIKE :search2)'; $params['search1'] = '%' . $search . '%'; $params['search2'] = '%' . $search . '%'; }
         if (in_array($status, ['Lunas', 'Belum Lunas'], true)) { $where[] = 't.status_bayar = :status'; $params['status'] = $status; }
         $condition = $where ? ' WHERE ' . implode(' AND ', $where) : '';
         $base = ' FROM tb_tagihan t INNER JOIN tb_pelanggan p ON p.npa = t.npa';

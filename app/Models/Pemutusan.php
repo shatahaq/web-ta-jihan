@@ -7,7 +7,7 @@ final class Pemutusan extends Model
     public function paginate(string $search, int $page, int $perPage = 12): array
     {
         $params = []; $condition = '';
-        if ($search !== '') { $condition = ' WHERE (m.npa LIKE :search OR p.nama_pelanggan LIKE :search)'; $params['search'] = '%' . $search . '%'; }
+        if ($search !== '') { $condition = ' WHERE (m.npa LIKE :search1 OR p.nama_pelanggan LIKE :search2)'; $params['search1'] = '%' . $search . '%'; $params['search2'] = '%' . $search . '%'; }
         $base = ' FROM tb_pemutusan m JOIN tb_pelanggan p ON p.npa = m.npa';
         $total = (int) ($this->fetch('SELECT COUNT(*) AS total' . $base . $condition, $params)['total'] ?? 0);
         $offset = max(0, ($page - 1) * $perPage);

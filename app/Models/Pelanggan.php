@@ -9,8 +9,10 @@ final class Pelanggan extends Model
         $where = [];
         $params = [];
         if ($search !== '') {
-            $where[] = '(npa LIKE :search OR nama_pelanggan LIKE :search OR alamat LIKE :search)';
-            $params['search'] = '%' . $search . '%';
+            $where[] = '(npa LIKE :search1 OR nama_pelanggan LIKE :search2 OR alamat LIKE :search3)';
+            $params['search1'] = '%' . $search . '%';
+            $params['search2'] = '%' . $search . '%';
+            $params['search3'] = '%' . $search . '%';
         }
         if (in_array($status, ['Aktif', 'Nonaktif', 'Putus'], true)) {
             $where[] = 'status = :status';
