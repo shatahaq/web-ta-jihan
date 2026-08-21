@@ -39,6 +39,7 @@ final class DaftarUlangController extends Controller
             $data['biaya_daftar_ulang'] = (float) $data['biaya_daftar_ulang'];
             $data['bukti_lunas'] = $this->uploadProof();
             $this->daftarUlang->create($data);
+            ActivityLog::log('Tambah', 'Daftar Ulang', $data['no_registrasi'], 'Mengajukan daftar ulang untuk NPA ' . $npa);
             Session::flash('toast', ['type' => 'success', 'message' => 'Pengajuan daftar ulang berhasil dikirim dan menunggu verifikasi.']); redirect('/daftar-ulang/' . rawurlencode($data['no_registrasi']));
         } catch (RuntimeException $e) { Session::flash('toast', ['type' => 'error', 'message' => $e->getMessage()]); Session::flash('old', $data); redirect('/daftar-ulang/create?npa=' . rawurlencode($npa)); }
         catch (Throwable $e) { error_log((string) $e); Session::flash('toast', ['type' => 'error', 'message' => 'Pengajuan gagal disimpan.']); redirect('/daftar-ulang/create?npa=' . rawurlencode($npa)); }
@@ -58,6 +59,7 @@ final class DaftarUlangController extends Controller
         if (!$this->daftarUlang->verify($registration, 'Disetujui', (int) Auth::id(), $activate)) {
             Session::flash('toast', ['type' => 'warning', 'message' => 'Pengajuan tidak dapat diverifikasi. Status mungkin sudah berubah.']);
         } else {
+            ActivityLog::log('Ubah', 'Daftar Ulang', $registration, 'Menyetujui pengajuan daftar ulang' . ($activate ? ' dan mengaktifkan pelanggan' : ''));
             Session::flash('toast', ['type' => 'success', 'message' => 'Pengajuan disetujui' . ($activate ? ' dan status pelanggan telah diaktifkan.' : '.')]);
         }
         redirect('/daftar-ulang/' . rawurlencode($registration));
@@ -67,6 +69,7 @@ final class DaftarUlangController extends Controller
     {
         Auth::requireAdmin(); $this->csrfOrFail();
         $ok = $this->daftarUlang->verify($registration, 'Ditolak', (int) Auth::id());
+        if ($ok) ActivityLog::log('Ubah', 'Daftar Ulang', $registration, 'Menolak pengajuan daftar ulang');
         Session::flash('toast', $ok ? ['type' => 'success', 'message' => 'Pengajuan daftar ulang ditolak.'] : ['type' => 'warning', 'message' => 'Pengajuan tidak dapat diverifikasi.']);
         redirect('/daftar-ulang/' . rawurlencode($registration));
     }

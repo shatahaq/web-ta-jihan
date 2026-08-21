@@ -32,6 +32,7 @@ final class PelangganController extends Controller
         }
         try {
             $this->pelanggan->create($data);
+            ActivityLog::log('Tambah', 'Pelanggan', $data['npa'], 'Menambahkan pelanggan baru: ' . $data['nama_pelanggan']);
             Session::flash('toast', ['type' => 'success', 'message' => 'Data pelanggan berhasil disimpan.']); redirect('/pelanggan');
         } catch (Throwable $e) { error_log((string) $e); Session::flash('toast', ['type' => 'error', 'message' => 'Data pelanggan gagal disimpan.']); redirect('/pelanggan/create'); }
     }
@@ -55,13 +56,15 @@ final class PelangganController extends Controller
     {
         Auth::requireAdmin(); $this->csrfOrFail(); $this->findOr404($npa);
         $data = $this->validatedInput(false); $this->pelanggan->update($npa, $data);
+        ActivityLog::log('Ubah', 'Pelanggan', $npa, 'Memperbarui data pelanggan: ' . $data['nama_pelanggan']);
         Session::flash('toast', ['type' => 'success', 'message' => 'Data pelanggan berhasil diperbarui.']); redirect('/pelanggan/' . rawurlencode($npa));
     }
 
     public function destroy(string $npa): void
     {
         Auth::requireAdmin(); $this->csrfOrFail();
-        try { $this->pelanggan->delete($npa); Session::flash('toast', ['type' => 'success', 'message' => 'Data pelanggan berhasil dihapus.']); }
+        $customer = $this->findOr404($npa);
+        try { $this->pelanggan->delete($npa); ActivityLog::log('Hapus', 'Pelanggan', $npa, 'Menghapus pelanggan: ' . $customer['nama_pelanggan']); Session::flash('toast', ['type' => 'success', 'message' => 'Data pelanggan berhasil dihapus.']); }
         catch (Throwable $e) { error_log((string) $e); Session::flash('toast', ['type' => 'error', 'message' => 'Pelanggan tidak dapat dihapus karena memiliki riwayat transaksi.']); }
         redirect('/pelanggan');
     }

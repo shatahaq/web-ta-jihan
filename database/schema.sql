@@ -79,3 +79,17 @@ CREATE TABLE IF NOT EXISTS tb_daftar_ulang (
     CONSTRAINT fk_daftar_ulang_user FOREIGN KEY (id_user) REFERENCES tb_user(id_user)
         ON UPDATE CASCADE ON DELETE SET NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+CREATE TABLE IF NOT EXISTS `tb_activity_log` (
+    `id_log` INT UNSIGNED NOT NULL AUTO_INCREMENT,
+    `id_user` INT UNSIGNED NOT NULL,
+    `aksi` ENUM('Tambah','Ubah','Hapus') NOT NULL,
+    `modul` VARCHAR(50) NOT NULL,
+    `referensi` VARCHAR(100) NOT NULL DEFAULT '',
+    `detail` TEXT NOT NULL,
+    `created_at` TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    PRIMARY KEY (`id_log`),
+    KEY `idx_activity_user` (`id_user`),
+    KEY `idx_activity_modul` (`modul`),
+    KEY `idx_activity_created` (`created_at` DESC),
+    CONSTRAINT `fk_activity_user` FOREIGN KEY (`id_user`) REFERENCES `tb_user` (`id_user`) ON DELETE CASCADE
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;

@@ -22,7 +22,7 @@ final class PemutusanController extends Controller
     {
         Auth::requireAdmin(); $this->csrfOrFail(); $data = $this->input(); $this->validateInput($data, '/pemutusan/create');
         if (!(new Pelanggan())->find($data['npa'])) { Session::flash('errors', ['npa' => 'Pelanggan tidak ditemukan.']); Session::flash('old', $data); redirect('/pemutusan/create'); }
-        $this->pemutusan->create($data); Session::flash('toast', ['type' => 'success', 'message' => 'Data pemutusan berhasil disimpan.']); redirect('/pemutusan');
+        $this->pemutusan->create($data); ActivityLog::log('Tambah', 'Pemutusan', $data['npa'], 'Menambahkan pemutusan: ' . $data['jenis_tindakan'] . ' untuk NPA ' . $data['npa']); Session::flash('toast', ['type' => 'success', 'message' => 'Data pemutusan berhasil disimpan.']); redirect('/pemutusan');
     }
 
     public function edit(string $id): void
@@ -34,7 +34,7 @@ final class PemutusanController extends Controller
     public function update(string $id): void
     {
         Auth::requireAdmin(); $this->csrfOrFail(); $data = $this->input(); $this->validateInput($data, '/pemutusan/' . $id . '/edit');
-        $this->pemutusan->update((int) $id, $data); Session::flash('toast', ['type' => 'success', 'message' => 'Data pemutusan berhasil diperbarui.']); redirect('/pemutusan');
+        $this->pemutusan->update((int) $id, $data); ActivityLog::log('Ubah', 'Pemutusan', $data['npa'] . ' (#' . $id . ')', 'Memperbarui pemutusan: ' . $data['jenis_tindakan'] . ' — ' . $data['status_pemutusan']); Session::flash('toast', ['type' => 'success', 'message' => 'Data pemutusan berhasil diperbarui.']); redirect('/pemutusan');
     }
 
     private function input(): array

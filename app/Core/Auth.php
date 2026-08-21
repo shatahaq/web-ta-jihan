@@ -89,4 +89,24 @@ final class Auth
         require root_path('app/Views/errors/403.php');
         exit;
     }
+
+    public static function isPimpinan(): bool
+    {
+        return self::check() && self::user()['role'] === 'Pimpinan';
+    }
+
+    public static function requirePimpinan(bool $api = false): void
+    {
+        self::requireLogin($api);
+        if (self::isPimpinan()) {
+            return;
+        }
+
+        if ($api) {
+            Controller::json(['message' => 'Anda tidak memiliki izin untuk melakukan tindakan ini.'], 403);
+        }
+        http_response_code(403);
+        require root_path('app/Views/errors/403.php');
+        exit;
+    }
 }

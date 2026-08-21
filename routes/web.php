@@ -37,3 +37,9 @@ $router->get('/daftar-ulang/{registration}', [DaftarUlangController::class, 'sho
 
 $router->get('/laporan', [LaporanController::class, 'index']);
 $router->get('/laporan/print', [LaporanController::class, 'print']);
+
+$router->get('/staff', [StaffController::class, 'index']);
+$router->get('/staff/create', [StaffController::class, 'create']);
+$router->post('/staff', [StaffController::class, 'store']);
+$router->delete('/staff/{id}', [StaffController::class, 'destroy']);
+$router->get('/riwayat-aktivitas', [ActivityLogController::class, 'index']);

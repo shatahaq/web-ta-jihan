@@ -3,7 +3,7 @@ USE tirtanadi;
 -- Semua password di bawah telah dibuat dengan password_hash() PHP.
 INSERT INTO tb_user (id_user, username, password, nama_lengkap, role) VALUES
 (1, 'admin', '$2y$10$UNfpQJhb6uR58OKIppb/C.donauV8zlysLB6.AF39wLat6NcaeCxy', 'Admin Hublang', 'Admin'),
-(2, 'admin.denai', '$2y$10$UNfpQJhb6uR58OKIppb/C.donauV8zlysLB6.AF39wLat6NcaeCxy', 'Nadia Pratama', 'Admin'),
+(2, 'admin.denai', '$2y$10$UNfpQJhb6uR58OKIppb/C.donauV8zlysLB6.AF39wLat6NcaeCxy', 'Nadya Lahfah', 'Admin'),
 (3, 'pimpinan', '$2y$10$WUo/agn9cv2.nVNP8r9uP.7BE7zzOfScz1zxa7Mbv0Fxqbmj6EFrW', 'Pimpinan Cabang', 'Pimpinan'),
 (4, 'pimpinan.operasional', '$2y$10$WUo/agn9cv2.nVNP8r9uP.7BE7zzOfScz1zxa7Mbv0Fxqbmj6EFrW', 'Rizky Wijaya', 'Pimpinan'),
 (5, 'pimpinan.layanan', '$2y$10$WUo/agn9cv2.nVNP8r9uP.7BE7zzOfScz1zxa7Mbv0Fxqbmj6EFrW', 'Sari Handayani', 'Pimpinan')
